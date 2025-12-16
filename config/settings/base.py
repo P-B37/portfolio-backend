@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/stable/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/stable/ref/settings/
 """
+
 import sys
 import os
 from datetime import timedelta
@@ -22,7 +23,7 @@ from decouple import config, Csv
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Add the 'apps' directory to the Python path to allow for cleaner imports.
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 
 # --- SECURITY CONFIGURATION ---
@@ -49,17 +50,13 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-
     "cloudinary_storage",
     "cloudinary",
-
     "django.contrib.staticfiles",
-
     # Third-party apps
     "rest_framework",
     "rest_framework_simplejwt",
     "djoser",
-
     # Local apps
     "apps.users.apps.UsersConfig",
     "apps.projects.apps.ProjectsConfig",
@@ -106,7 +103,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 # --- DATABASE CONFIGURATION ---
-# Database configuration is defined in environment-specific files (local.py, production.py).
+# Database configuration is defined in environment-specific files (local.py, production.py). # noqa: E501
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
 
@@ -114,7 +111,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa: E501
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -130,8 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --- INTERNATIONALIZATION ---
 # https://docs.djangoproject.com/en/stable/topics/i18n/
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
@@ -139,8 +136,8 @@ USE_TZ = True
 # --- FILE UPLOAD CONFIGURATION ---
 # Handlers for processing file uploads.
 FILE_UPLOAD_HANDLERS = [
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
-    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
 ]
 
 # --- STATIC FILES CONFIGURATION ---
@@ -149,82 +146,89 @@ STATIC_URL = "static/"
 
 # --- DEFAULT PRIMARY KEY FIELD TYPE ---
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- AUTHENTICATION CONFIGURATION ---
 # Custom user model for authentication.
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"
 
 # --- DJANGO REST FRAMEWORK CONFIGURATION ---
 REST_FRAMEWORK = {
     # Authentication classes for REST framework.
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     # Default permission classes.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
     ],
     # Custom exception handler for consistent error responses.
-    'EXCEPTION_HANDLER': 'apps.core.exceptions.custom_exception_handler',
+    "EXCEPTION_HANDLER": "apps.core.exceptions.custom_exception_handler",
     # Custom pagination class.
-    'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.CustomPagination',
-    'PAGE_SIZE': 10
+    "DEFAULT_PAGINATION_CLASS": "apps.core.pagination.CustomPagination",
+    "PAGE_SIZE": 10,
 }
 
 # --- SIMPLE JWT CONFIGURATION ---
 # Configuration for JSON Web Token authentication.
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 # --- DJOSER CONFIGURATION ---
 # Configuration for user registration and authentication endpoints.
 DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SEND_CONFIRMATION_EMAIL': True,
-    'SET_USERNAME_RETYPE': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'users.serializers.UserSerializer',
-        'current_user': 'users.serializers.UserSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    "LOGIN_FIELD": "email",
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "SET_USERNAME_RETYPE": True,
+    "SET_PASSWORD_RETYPE": True,
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "SERIALIZERS": {
+        "user_create": "users.serializers.UserCreateSerializer",
+        "user": "users.serializers.UserSerializer",
+        "current_user": "users.serializers.UserSerializer",
+        "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }
 
-DEFAULT_FILE_STORAGE = config("DEFAULT_FILE_STORAGE")
 STORAGES = {
     "default": {
-        "BACKEND": config("CLOUDINARY_DEFAULT_FILE_STORAGE"),
+        "BACKEND": config(
+            "DEFAULT_FILE_STORAGE",
+            default="django.core.files.storage.FileSystemStorage",
+        ),
     },
     "staticfiles": {
-        "BACKEND": config("CLOUDINARY_STATIC_FILE_STORAGE"),
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 
-CLOUDINARY_CREDENTIALS = {
-    "cloud_name": config("CLOUDINARY_CLOUD_NAME"),
-    "api_key": config("CLOUDINARY_API_KEY"),
-    "api_secret": config("CLOUDINARY_API_SECRET"),
-}
 
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": CLOUDINARY_CREDENTIALS["cloud_name"],
-    "API_KEY": CLOUDINARY_CREDENTIALS["api_key"],
-    "API_SECRET": CLOUDINARY_CREDENTIALS["api_secret"],
-}
+USE_CLOUDINARY = config("USE_CLOUDINARY", default=False, cast=bool)
 
+if USE_CLOUDINARY:
+    CLOUDINARY_CREDENTIALS = {
+        "cloud_name": config("CLOUDINARY_CLOUD_NAME"),
+        "api_key": config("CLOUDINARY_API_KEY"),
+        "api_secret": config("CLOUDINARY_API_SECRET"),
+    }
 
-CLOUDINARY = CLOUDINARY_CREDENTIALS
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": CLOUDINARY_CREDENTIALS["cloud_name"],
+        "API_KEY": CLOUDINARY_CREDENTIALS["api_key"],
+        "API_SECRET": CLOUDINARY_CREDENTIALS["api_secret"],
+    }
 
-MEDIA_URL = config("MEDIA_URL")
+    STORAGES["default"]["BACKEND"] = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+    CLOUDINARY = CLOUDINARY_CREDENTIALS
+
+MEDIA_URL = config("MEDIA_URL", default="/media/")

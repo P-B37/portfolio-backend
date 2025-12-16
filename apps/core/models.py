@@ -1,22 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-class SoftDeleteManager(models.Manager):
-    """Custom manager for SoftDeleteModel.
+from .managers import SoftDeleteManager
 
-    Provides methods to filter out or include soft-deleted objects in querysets.
-    """
-    def get_queryset(self):
-        """
-        Returns a queryset containing only non-deleted objects.
-        """
-        return super().get_queryset().filter(is_deleted=False)
-    
-    def all_with_deleted(self):
-        """
-        Returns a queryset of all objects, including soft-deleted ones.
-        """
-        return super().get_queryset()
 
 class SoftDeleteModel(models.Model):
     """Abstract model for soft deletion.
@@ -29,6 +15,7 @@ class SoftDeleteModel(models.Model):
     deletion status. The `hard_delete()` method can be used to permanently
     delete the record.
     """
+
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
@@ -57,9 +44,17 @@ class SoftDeleteModel(models.Model):
         self.is_deleted = False
         self.deleted_at = None
         self.save()
-    
+
     def hard_delete(self):
         """
         Permanently deletes the object from the database.
         """
         super().delete()
+
+
+class TimeStampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True

@@ -1,0 +1,10 @@
+[flake8]
+max-line-length = 88
+extend-ignore = E203
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,migrations
+
+per-file-ignores =
+    # Ignore star imports in settings files
+    config/settings/*: F403, F405
+    # Ignore unused imports in apps.py (needed for signals)
+    apps/*/apps.py: F401

@@ -1,6 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+
 class CustomPagination(PageNumberPagination):
     """
     Custom pagination class for the API.
@@ -15,9 +16,10 @@ class CustomPagination(PageNumberPagination):
         page_size_query_param (str): The name of the query parameter that
             allows clients to override the page size.
         max_page_size (int): The maximum allowed page size.
-        """
+    """
+
     page_size = 10
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 100
 
     def get_paginated_response(self, data):
@@ -36,13 +38,15 @@ class CustomPagination(PageNumberPagination):
             Response: A Django REST Framework `Response` object with the
                 custom paginated response.
         """
-        return Response({
-            'meta': {
-                'count': self.page.paginator.count,
-                'page': self.page.paginator.num_pages,
-                'current_page': self.page.number,
-                'next': self.get_next_link(),
-                'previous': self.get_previous_link(),
-            },
-            'results': data
-        })
+        return Response(
+            {
+                "meta": {
+                    "count": self.page.paginator.count,
+                    "page": self.page.paginator.num_pages,
+                    "current_page": self.page.number,
+                    "next": self.get_next_link(),
+                    "previous": self.get_previous_link(),
+                },
+                "results": data,
+            }
+        )

@@ -3,10 +3,10 @@ name = "portfolio-backend"
 version = "0.1.0"
 description = "Professional Django Portfolio API"
 authors = [
-    {name = "bonheurNE07",email = "bonheurndezenc@gmail.com"}
+    { name = "bonheurNE07", email = "bonheurndezenc@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.14, <4.0"
+requires-python = ">=3.12, <4.0"
 dependencies = [
     "django (>=6.0,<7.0)",
     "djangorestframework (>=3.16.1,<4.0.0)",
@@ -18,6 +18,8 @@ dependencies = [
     "cloudinary (>=1.44.1,<2.0.0)"
 ]
 
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -28,10 +30,11 @@ dev = [
     "black (>=25.12.0,<26.0.0)",
     "flake8 (>=7.3.0,<8.0.0)",
     "pytest (>=9.0.2,<10.0.0)",
-    "pytest-django (>=4.11.1,<5.0.0)"
+    "pytest-django (>=4.11.1,<5.0.0)",
+    "pre-commit (>=4.5.0,<5.0.0)"
 ]
 
 # Configuration for Black to ensure line length matches standard
 [tool.black]
 line-length = 88
-target-version = ['py314']
+target-version = ['py312']

@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from .models import Project
 from .services import generate_project_slug
 
+
 @receiver(pre_save, sender=Project)
 def set_project_slug(sender, instance: Project, **kwargs):
     """
@@ -17,4 +18,3 @@ def set_project_slug(sender, instance: Project, **kwargs):
     """
     if not instance.slug:
         instance.slug = generate_project_slug(instance.title, instance.id)
-
