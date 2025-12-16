@@ -2,13 +2,29 @@ name: Django CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feat/*"] # Also run on feature branches!
   pull_request:
     branches: ["main"]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      # This creates a temporary, empty Postgres DB just for the duration of the test
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: portfolio_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     strategy:
       matrix:
@@ -24,13 +40,52 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install Poetry
-      run: |
-        python -m pip install --upgrade pip
-        pip install poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
     - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root
+
+    # CRITICAL STEP: Create a dummy .env file so python-decouple doesn't crash.
+    # We use MOCK credentials here because tests run in an isolated environment.
+    - name: Create .env file
       run: |
-        poetry install --no-interaction --no-root
+        echo "DJANGO_SETTINGS_MODULE=config.settings.local" >> .env
+        echo "SECRET_KEY=django-insecure-test-key-123" >> .env
+        echo "DEBUG=True" >> .env
+        echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> .env
+        
+        # Database: Mapped to the 'postgres' service defined above (Safe for CI)
+        echo "DB_NAME=portfolio_db" >> .env
+        echo "DB_USER=postgres" >> .env
+        echo "DB_PASSWORD=password" >> .env
+        echo "DB_HOST=localhost" >> .env
+        echo "DB_PORT=5432" >> .env
+        
+        # Email & Site
+        echo "DEFAULT_FROM_EMAIL=test@example.com" >> .env
+        echo "DOMAIN=localhost:8000" >> .env
+        echo "SITE_NAME=Portfolio CI" >> .env
+        
+        # Cloudinary: MOCKED. Tests should not rely on real external API calls.
+        echo "USE_CLOUDINARY=True" >> .env
+        echo "CLOUDINARY_CLOUD_NAME=mock-cloud" >> .env
+        echo "CLOUDINARY_API_KEY=123456789" >> .env
+        echo "CLOUDINARY_API_SECRET=mock-secret-do-not-use-real-one" >> .env
+
+    - name: Run Linting (Black & Flake8)
+      run: |
+        poetry run pre-commit run --all-files
 
     - name: Run tests
       env:
