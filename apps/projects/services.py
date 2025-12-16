@@ -1,5 +1,6 @@
 from django.utils.text import slugify
 
+
 def generate_project_slug(title: str, project_id: str) -> str:
     """
     Generate a unique slug for a project based on its title and ID.

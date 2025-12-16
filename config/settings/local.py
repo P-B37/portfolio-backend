@@ -8,15 +8,15 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
 # Email Backend (Prints emails to console instead of sending them)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')    
-DOMAIN =  config('DOMAIN', default='localhost:8000')
-SITE_NAME = config('SITE_NAME')
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+DOMAIN = config("DOMAIN", default="localhost:8000")
+SITE_NAME = config("SITE_NAME")

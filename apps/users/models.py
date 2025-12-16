@@ -1,6 +1,7 @@
 """
 Custom User model for the application.
 """
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -16,6 +17,7 @@ class User(SoftDeleteModel, AbstractUser):
     This model inherits from `SoftDeleteModel` to support soft deletion and
     `AbstractUser` for Django's authentication framework.
     """
+
     # Remove the username field from the default AbstractUser model.
     username = None
     # Use email as the unique identifier for authentication.
@@ -23,7 +25,8 @@ class User(SoftDeleteModel, AbstractUser):
 
     # Set the email field as the username field for authentication.
     USERNAME_FIELD = "email"
-    # No additional fields are required for user creation. Email and password are required by default.
+    # No additional fields are required for user creation.
+    # Email and password are required by default.
     REQUIRED_FIELDS = []
 
     # Use the custom manager for this user model.

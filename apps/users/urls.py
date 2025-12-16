@@ -1,5 +1,4 @@
-from django.urls import path
+# TODO custom URLS for user app
+# from django.urls import path
 
-urlpatterns = [
-    # Custom urls to overwrite Djoser defaults 
-]
+urlpatterns = []

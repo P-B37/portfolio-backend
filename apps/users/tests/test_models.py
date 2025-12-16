@@ -5,6 +5,7 @@ This module contains tests for the User model, ensuring that its
 custom functionalities, such as email-based authentication and soft
 deletion, work as expected.
 """
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
@@ -26,8 +27,7 @@ class TestUserModel:
         Ensures a new user can be created successfully with an email and password.
         """
         user = User.objects.create_user(
-            email="test.user@example.com",
-            password="complexpassword123"
+            email="test.user@example.com", password="complexpassword123"
         )
 
         assert user.email == "test.user@example.com"
@@ -49,8 +49,7 @@ class TestUserModel:
         Ensures a new superuser can be created successfully.
         """
         superuser = User.objects.create_superuser(
-            email="superuser@example.com",
-            password="supersecretpassword"
+            email="superuser@example.com", password="supersecretpassword"
         )
 
         assert superuser.email == "superuser@example.com"
@@ -68,7 +67,7 @@ class TestUserModel:
             User.objects.create_superuser(
                 email="superuser@example.com",
                 password="supersecretpassword",
-                is_staff=False
+                is_staff=False,
             )
 
     def test_create_superuser_without_superuser_flag_raises_error(self):
@@ -79,7 +78,7 @@ class TestUserModel:
             User.objects.create_superuser(
                 email="superuser@example.com",
                 password="supersecretpassword",
-                is_superuser=False
+                is_superuser=False,
             )
 
     def test_user_email_is_unique(self):
@@ -89,15 +88,16 @@ class TestUserModel:
         """
         User.objects.create_user(email="test.user@example.com", password="password123")
         with pytest.raises(IntegrityError):
-            User.objects.create_user(email="test.user@example.com", password="password456")
+            User.objects.create_user(
+                email="test.user@example.com", password="password456"
+            )
 
     def test_soft_delete_user(self):
         """
         Ensures that the delete() method performs a soft delete.
         """
         user = User.objects.create_user(
-            email="delete.me@example.com",
-            password="testpass123"
+            email="delete.me@example.com", password="testpass123"
         )
         user.delete()
 
@@ -114,8 +114,7 @@ class TestUserModel:
         Ensures that a soft-deleted user can be restored.
         """
         user = User.objects.create_user(
-            email="restore.me@example.com",
-            password="testpass123"
+            email="restore.me@example.com", password="testpass123"
         )
         user.delete()
         user.restore()
@@ -130,8 +129,7 @@ class TestUserModel:
         Ensures that the hard_delete() method permanently deletes a user.
         """
         user = User.objects.create_user(
-            email="hard.delete@example.com",
-            password="testpass123"
+            email="hard.delete@example.com", password="testpass123"
         )
         user_id = user.id
         user.hard_delete()
@@ -144,7 +142,6 @@ class TestUserModel:
         Ensures the string representation of a user is their email address.
         """
         user = User.objects.create_user(
-            email="string.rep@example.com",
-            password="testpass123"
+            email="string.rep@example.com", password="testpass123"
         )
         assert str(user) == "string.rep@example.com"

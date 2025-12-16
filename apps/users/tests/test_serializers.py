@@ -4,8 +4,9 @@ Tests for the User serializers.
 This module contains tests for the user-related serializers, ensuring
 that they correctly validate and serialize user data.
 """
+
 import pytest
-from users.serializers import UserCreateSerializer
+from apps.users.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -29,7 +30,7 @@ class TestUserCreateSerializer:
             "password": "complexpassword123",
             "re_password": "complexpassword123",
             "first_name": "Test",
-            "last_name": "User"
+            "last_name": "User",
         }
 
         serializer = UserCreateSerializer(data=data)
@@ -44,7 +45,7 @@ class TestUserCreateSerializer:
             "password": "complexpassword123",
             "re_password": "complexpassword123",
             "first_name": "Test",
-            "last_name": "User"
+            "last_name": "User",
         }
 
         serializer = UserCreateSerializer(data=data)
@@ -85,7 +86,7 @@ class TestUserCreateSerializer:
         serializer = UserCreateSerializer(data=data)
 
         assert not serializer.is_valid()
-        assert "password" in serializer.errors
+        assert "re_password" in serializer.errors
 
     def test_serializer_with_missing_email(self):
         """
