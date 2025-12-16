@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+
+    "cloudinary_storage",
+    "cloudinary",
+
     "django.contrib.staticfiles",
 
     # Third-party apps
@@ -197,3 +201,30 @@ DJOSER = {
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     },
 }
+
+DEFAULT_FILE_STORAGE = config("DEFAULT_FILE_STORAGE")
+STORAGES = {
+    "default": {
+        "BACKEND": config("CLOUDINARY_DEFAULT_FILE_STORAGE"),
+    },
+    "staticfiles": {
+        "BACKEND": config("CLOUDINARY_STATIC_FILE_STORAGE"),
+    },
+}
+
+CLOUDINARY_CREDENTIALS = {
+    "cloud_name": config("CLOUDINARY_CLOUD_NAME"),
+    "api_key": config("CLOUDINARY_API_KEY"),
+    "api_secret": config("CLOUDINARY_API_SECRET"),
+}
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": CLOUDINARY_CREDENTIALS["cloud_name"],
+    "API_KEY": CLOUDINARY_CREDENTIALS["api_key"],
+    "API_SECRET": CLOUDINARY_CREDENTIALS["api_secret"],
+}
+
+
+CLOUDINARY = CLOUDINARY_CREDENTIALS
+
+MEDIA_URL = config("MEDIA_URL")
