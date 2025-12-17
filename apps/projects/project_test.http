@@ -1,0 +1,68 @@
+@baseUrl = http://localhost:8000/api
+@projectSlug = my-awesome-project-29672363
+
+# -----------------------------------------------------
+# 1. ADMIN LOGIN
+# We need this to get a token for creating/editing projects
+# -----------------------------------------------------
+###
+# @name adminLogin
+POST {{baseUrl}}/auth/jwt/create/
+Content-Type: application/json
+
+{
+    "email": "bonheurndezenc@gmail.com",
+    "password": "bonheurBNE37"
+}
+
+# -----------------------------------------------------
+# 2. LIST PROJECTS (PUBLIC)
+# Should return an empty list initially (or only published ones)
+# -----------------------------------------------------
+###
+GET {{baseUrl}}/projects/
+
+# -----------------------------------------------------
+# 3. CREATE PROJECT (ADMIN ONLY)
+# -----------------------------------------------------
+###
+POST {{baseUrl}}/projects/
+Content-Type: application/json
+Authorization: Bearer {{adminLogin.response.body.access}}
+
+{
+    "title": "My Awesome Project",
+    "summary": "This is a test project created via VS Code REST Client.",
+    "content": "# Hello World\nThis is markdown content.",
+    "status": "PB",
+    "is_featured": true,
+    "repository_url": "https://github.com/bonheur/repo",
+    "live_demo_url": "https://bonheur.dev"
+}
+
+# -----------------------------------------------------
+# 4. GET PROJECT DETAILS (PUBLIC)
+# Replace the slug below with the one returned in step #3 response
+# -----------------------------------------------------
+###
+GET {{baseUrl}}/projects/{{projectSlug}}/
+
+# -----------------------------------------------------
+# 5. UPDATE PROJECT (ADMIN ONLY)
+# -----------------------------------------------------
+###
+PATCH {{baseUrl}}/projects/{{projectSlug}}/
+Content-Type: application/json
+Authorization: Bearer {{adminLogin.response.body.access}}
+
+{
+    "summary": "Updated summary via API!",
+    "is_featured": false
+}
+
+# -----------------------------------------------------
+# 6. DELETE PROJECT (ADMIN ONLY)
+# -----------------------------------------------------
+###
+DELETE {{baseUrl}}/projects/{{projectSlug}}/
+Authorization: Bearer {{adminLogin.response.body.access}}

@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:8000/api
+
+# -----------------------------------------------------
+# 1. CREATE USER
+# -----------------------------------------------------
+###
+POST {{baseUrl}}/auth/users/
+Content-Type: application/json
+
+{
+    "email": "bonheur.emmanuel@example.com",
+    "first_name": "Bonheur",
+    "last_name": "Dev",
+    "password": "complexpassword123",
+    "re_password": "complexpassword123"
+}
+
+# -----------------------------------------------------
+# 2. LOGIN (GET JWT TOKENS)
+# We name this request 'login' so we can reference the token later
+# -----------------------------------------------------
+###
+# @name login
+POST {{baseUrl}}/auth/jwt/create/
+Content-Type: application/json
+
+{
+    "email": "bonheur.emmanuel@example.com",
+    "password": "complexpassword123"
+}
+
+# -----------------------------------------------------
+# 3. GET CURRENT USER PROFILE
+# Requires the Access Token from the step above
+# -----------------------------------------------------
+###
+GET {{baseUrl}}/auth/users/me/
+Authorization: Bearer {{login.response.body.access}}

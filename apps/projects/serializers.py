@@ -22,7 +22,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "content",
             "image",
             "repository_url",
-            "live_url",
+            "live_demo_url",
             "status",
             "status_label",
             "is_featured",
