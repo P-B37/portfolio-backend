@@ -20,9 +20,12 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # Authentication URLs
     # Priority #1 for custom url
     path("api/auth/", include("apps.users.urls")),
     # Priority #2 for failover djoser urls
     path("api/auth/", include("djoser.urls")),
     path("api/auth/", include("djoser.urls.jwt")),
+    # Project API URLs
+    path("api/projects/", include("apps.projects.urls")),
 ]
