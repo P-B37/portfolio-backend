@@ -64,19 +64,19 @@ jobs:
         echo "SECRET_KEY=django-insecure-test-key-123" >> .env
         echo "DEBUG=True" >> .env
         echo "ALLOWED_HOSTS=localhost,127.0.0.1" >> .env
-        
+
         # Database: Mapped to the 'postgres' service defined above (Safe for CI)
         echo "DB_NAME=portfolio_db" >> .env
         echo "DB_USER=postgres" >> .env
         echo "DB_PASSWORD=password" >> .env
         echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=5432" >> .env
-        
+
         # Email & Site
         echo "DEFAULT_FROM_EMAIL=test@example.com" >> .env
         echo "DOMAIN=localhost:8000" >> .env
         echo "SITE_NAME=Portfolio CI" >> .env
-        
+
         # Cloudinary: MOCKED. Tests should not rely on real external API calls.
         echo "USE_CLOUDINARY=True" >> .env
         echo "CLOUDINARY_CLOUD_NAME=mock-cloud" >> .env
