@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from apps.core.pagination import StandardResultsSetPagination
+from apps.core.pagination import CustomPagination
 from .models import Project
 from .serializers import ProjectSerializer
 
@@ -12,7 +12,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = CustomPagination
     lookup_field = "slug"
 
     def get_queryset(self):
