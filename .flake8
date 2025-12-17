@@ -1,10 +1,23 @@
 [flake8]
+# Set the maximum line length to match Black
 max-line-length = 88
+# Ignore specific errors (E203 is whitespace before ':', incompatible with Black)
 extend-ignore = E203
-exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,migrations
 
+# EXCLUDE MIGRATIONS HERE
+# The pattern *migrations* ensures any folder named 'migrations' is skipped
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .venv,
+    */migrations/*,
+    *migrations*
+
+# Ignore errors in specific types of files
 per-file-ignores =
-    # Ignore star imports in settings files
+    # Settings files use star imports (*), which is standard in Django
     config/settings/*: F403, F405
-    # Ignore unused imports in apps.py (needed for signals)
+    # App configs often import signals but don't use them directly
     apps/*/apps.py: F401
