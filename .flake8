@@ -13,7 +13,8 @@ exclude =
     dist,
     .venv,
     */migrations/*,
-    *migrations*
+    *migrations*,
+    cache/*
 
 # Ignore errors in specific types of files
 per-file-ignores =

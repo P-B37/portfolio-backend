@@ -11,7 +11,15 @@ def generate_project_slug(title: str, project_id: str) -> str:
 
     Returns:
         str: A unique slug for the project.
+
+    Raises:
+        ValueError: If the title or project_id is empty.
     """
+    if not title:
+        raise ValueError("Project title cannot be empty.")
+    if not project_id:
+        raise ValueError("Project ID cannot be empty.")
+
     base_slug = slugify(title)
     short_id = str(project_id)[:8]
 
