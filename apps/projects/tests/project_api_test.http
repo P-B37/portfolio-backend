@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:8000/api
-@projectSlug = my-awesome-project-29672363
+@projectSlug = my-awesome-project-b93573ac
 
 # -----------------------------------------------------
 # 1. ADMIN LOGIN
@@ -11,8 +11,8 @@ POST {{baseUrl}}/auth/jwt/create/
 Content-Type: application/json
 
 {
-    "email": "bonheurndezenc@gmail.com",
-    "password": "bonheurBNE37"
+    "email": "admin@gmail.com",
+    "password": "test123456"
 }
 
 # -----------------------------------------------------
@@ -21,6 +21,7 @@ Content-Type: application/json
 # -----------------------------------------------------
 ###
 GET {{baseUrl}}/projects/
+Authorization: Bearer {{adminLogin.response.body.access}}
 
 # -----------------------------------------------------
 # 3. CREATE PROJECT (ADMIN ONLY)
