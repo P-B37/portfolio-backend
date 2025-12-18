@@ -41,7 +41,7 @@ SECRET_KEY = config(
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 # A list of allowed host/domain names for this site.
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=[], cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
 
 # --- APPLICATION DEFINITION ---
