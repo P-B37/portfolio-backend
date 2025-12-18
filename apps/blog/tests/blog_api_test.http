@@ -10,8 +10,8 @@ POST {{baseUrl}}/auth/jwt/create/
 Content-Type: application/json
 
 {
-    "email": "bonheurndezenc@gmail.com",
-    "password": "bonheurBNE37"
+    "email": "admin@gmail.com",
+    "password": "test123456"
 }
 
 # -----------------------------------------------------
