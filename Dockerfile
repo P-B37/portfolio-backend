@@ -11,7 +11,6 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 ENV POETRY_CACHE_DIR='/var/cache/pypoetry'
 ENV POETRY_HOME='/usr/local'
 
-
 # set work directory
 WORKDIR /app
 
