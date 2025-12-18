@@ -3,7 +3,7 @@ from django.db import models
 
 class PostQuerySet(models.QuerySet):
     def published(self):
-        return self.filter(is_published=True)
+        return self.filter(status="PB")
 
     def by_author(self, author):
         return self.filter(author=author)

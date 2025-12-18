@@ -37,6 +37,11 @@ class Post(TimeStampedModel, SoftDeleteModel):
         help_text="Main content of the blog\
             post in markdown format"
     )
+    reading_time = models.PositiveIntegerField(
+        help_text="Estimated reading time in minutes",
+        null=True,
+        blank=True,
+    )
 
     image = models.ImageField(upload_to="portfolio/", null=True, blank=True)
 
