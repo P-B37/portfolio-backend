@@ -42,4 +42,3 @@ EXPOSE 8000
 
 # COMMAND TO RUN THE APPLICATION
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
-
