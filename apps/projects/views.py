@@ -1,5 +1,6 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from apps.core.pagination import CustomPagination
+from apps.core.permissions import IsAdminOrReadOnly
 from .models import Project
 from .serializers import ProjectSerializer
 
@@ -13,6 +14,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
+    permissions_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
 
     def get_queryset(self):
@@ -20,8 +22,3 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return Project.objects.all()
 
         return Project.objects.published()
-
-    def get_permissions(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return [permissions.AllowAny()]
-        return [permissions.IsAdminUser()]

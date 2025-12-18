@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:8000/api
+@postSlug = auto-author-test
+
+# -----------------------------------------------------
+# 1. ADMIN LOGIN
+# -----------------------------------------------------
+###
+# @name adminLogin
+POST {{baseUrl}}/auth/jwt/create/
+Content-Type: application/json
+
+{
+    "email": "bonheurndezenc@gmail.com",
+    "password": "bonheurBNE37"
+}
+
+# -----------------------------------------------------
+# 2. CREATE POST (ADMIN)
+# Note: We do NOT send 'author' or 'read_time'.
+# The backend should calculate these automatically.
+# -----------------------------------------------------
+###
+POST {{baseUrl}}/blog/
+Content-Type: application/json
+Authorization: Bearer {{adminLogin.response.body.access}}
+
+{
+    "title": "Auto Author Test",
+    "summary": "Testing if author is assigned automatically.",
+    "content": "This is a test post. It has enough words to be roughly one minute of reading time. We are testing the service layer integration via the API.",
+    "status": "PB"
+}
+
+# -----------------------------------------------------
+# 3. LIST POSTS (PUBLIC)
+# Should see the post created above
+# -----------------------------------------------------
+###
+GET {{baseUrl}}/blog/
+
+# -----------------------------------------------------
+# 4. GET SINGLE POST
+# Check the response to see if 'author' is populated and 'read_time' > 0
+# -----------------------------------------------------
+###
+GET {{baseUrl}}/blog/{{postSlug}}/
+
+# -----------------------------------------------------
+# 5. DELETE POST
+# -----------------------------------------------------
+###
+DELETE {{baseUrl}}/blog/{{postSlug}}/
+Authorization: Bearer {{adminLogin.response.body.access}}
+
+# -----------------------------------------------------
+# 6. CREATE POST WITH IMAGE (Multipart)
+# -----------------------------------------------------
+###
+POST {{baseUrl}}/blog/
+Authorization: Bearer {{adminLogin.response.body.access}}
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="title"
+
+Post With Image Upload
+--MyBoundary
+Content-Disposition: form-data; name="summary"
+
+Post With Image Upload
+--MyBoundary
+Content-Disposition: form-data; name="content"
+
+Testing Cloudinary upload from VS Code.
+--MyBoundary
+Content-Disposition: form-data; name="status"
+
+PB
+--MyBoundary
+Content-Disposition: form-data; name="image"; filename="test-image.jpg"
+Content-Type: image/jpeg
+
+< ./test-image.jpg
+--MyBoundary--
