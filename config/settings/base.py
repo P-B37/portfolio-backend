@@ -31,7 +31,10 @@ sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # The secret key is used for cryptographic signing.
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-please-change-me",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Debug mode displays detailed error pages, which can leak sensitive information.
@@ -44,13 +47,13 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=[], cast=Csv())
 # --- APPLICATION DEFINITION ---
 # Application definition
 INSTALLED_APPS = [
+    "corsheaders",
     # Django core apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "cloudinary_storage",
     "cloudinary",
     "django.contrib.staticfiles",
     # Third-party apps
@@ -67,7 +70,9 @@ INSTALLED_APPS = [
 # --- MIDDLEWARE CONFIGURATION ---
 # A list of middleware to be executed for each request/response.
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -75,6 +80,21 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# --- CORS CONFIGURATION ---
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
 
 # --- URL CONFIGURATION ---
 # The root URL configuration module.
@@ -143,6 +163,9 @@ FILE_UPLOAD_HANDLERS = [
 # --- STATIC FILES CONFIGURATION ---
 # https://docs.djangoproject.com/en/stable/howto/static-files/
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # --- DEFAULT PRIMARY KEY FIELD TYPE ---
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
@@ -201,13 +224,10 @@ DJOSER = {
 
 STORAGES = {
     "default": {
-        "BACKEND": config(
-            "DEFAULT_FILE_STORAGE",
-            default="django.core.files.storage.FileSystemStorage",
-        ),
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
@@ -216,9 +236,21 @@ USE_CLOUDINARY = config("USE_CLOUDINARY", default=False, cast=bool)
 
 if USE_CLOUDINARY:
     CLOUDINARY_CREDENTIALS = {
-        "cloud_name": config("CLOUDINARY_CLOUD_NAME"),
-        "api_key": config("CLOUDINARY_API_KEY"),
-        "api_secret": config("CLOUDINARY_API_SECRET"),
+        "cloud_name": config(
+            "CLOUDINARY_CLOUD_NAME",
+            default="demo",
+            cast=str,
+        ),
+        "api_key": config(
+            "CLOUDINARY_API_KEY",
+            default="123456789012345",
+            cast=str,
+        ),
+        "api_secret": config(
+            "CLOUDINARY_API_SECRET",
+            default="abcdefghijklmnopqrstuvwxyz",
+            cast=str,
+        ),
     }
 
     CLOUDINARY_STORAGE = {
