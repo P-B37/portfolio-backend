@@ -28,4 +28,6 @@ urlpatterns = [
     path("api/auth/", include("djoser.urls.jwt")),
     # Project API URLs
     path("api/projects/", include("apps.projects.urls")),
+    # Blog API URLs
+    path("api/blog/", include("apps.blog.urls")),
 ]
