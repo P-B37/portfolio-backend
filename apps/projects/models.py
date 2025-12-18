@@ -19,7 +19,7 @@ class Project(SoftDeleteModel, TimeStampedModel):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     summary = models.TextField(
-        help_text="Short overview for cards.",
+        help_text="Short overview for the project",
         validators=[MaxLengthValidator(500)],
     )
     content = models.TextField(help_text="Markdown supported")
