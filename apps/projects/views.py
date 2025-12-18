@@ -14,7 +14,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     serializer_class = ProjectSerializer
     pagination_class = CustomPagination
-    permissions_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
 
     def get_queryset(self):

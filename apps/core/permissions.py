@@ -12,4 +12,4 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         # Write permissions are only allowed to admin users.
-        return request.user and request.user.is_staff
+        return bool(request.user and request.user.is_staff)
