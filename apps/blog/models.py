@@ -10,9 +10,9 @@ from .managers import PostManager
 
 
 class StatusChoices(models.TextChoices):
-    DRAFT = "draft", _("Draft")
-    PUBLISHED = "published", _("Published")
-    ARCHIVED = "archived", _("Archived")
+    DRAFT = "DF", _("Draft")
+    PUBLISHED = "PB", _("Published")
+    ARCHIVED = "AC", _("Archived")
 
 
 class Post(TimeStampedModel, SoftDeleteModel):
