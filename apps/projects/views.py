@@ -32,7 +32,6 @@ class ProjectFeaturedViewSet(ReadOnlyModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    pagination_class = CustomPagination
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
 
