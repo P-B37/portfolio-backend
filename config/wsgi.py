@@ -14,7 +14,7 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE",
-    config("DJANGO_SETTINGS_MODULE", default="config.settings.local"),
+    config("DJANGO_SETTINGS_MODULE", default="config.settings.production"),
 )
 
 application = get_wsgi_application()
