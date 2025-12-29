@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "apps.users.apps.UsersConfig",
     "apps.projects.apps.ProjectsConfig",
     "apps.blog.apps.BlogConfig",
+    "apps.contact.apps.ContactConfig",
     "apps.core.apps.CoreConfig",
 ]
 
