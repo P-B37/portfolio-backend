@@ -46,7 +46,6 @@ class ContactAPIView(APIView):
                     recipient_list=[settings.ADMIN_EMAIL],
                     html_message=html_message,  # <--- The HTML version goes here
                     fail_silently=False,
-                    reply_to=[data["email"]],
                 )
 
                 return Response({"message": "Message sent!"}, status=status.HTTP_200_OK)
