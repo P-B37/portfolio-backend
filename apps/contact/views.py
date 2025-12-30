@@ -43,7 +43,7 @@ class ContactAPIView(APIView):
                     subject=email_subject,
                     message=plain_message,  # <--- The plain text version goes here
                     from_email="bonheurndezenc@gmail.com",
-                    recipient_list=[settings.ADMIN_EMAIL],
+                    recipient_list="bonheurndezenc@gmail.com",
                     html_message=html_message,  # <--- The HTML version goes here
                     fail_silently=False,
                 )
