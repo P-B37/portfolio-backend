@@ -49,7 +49,7 @@ EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
 
 # Who receives the contact form? (Your personal email)
-ADMIN_EMAIL = config("ADMIN_EMAIL", default="noreply@localhost")
+ADMIN_EMAIL = config("ADMIN_EMAIL", default="bonheurndezenc@gmail.com")
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 EMAIL_USE_TLS = True
