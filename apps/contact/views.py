@@ -42,7 +42,7 @@ class ContactAPIView(APIView):
                 send_mail(
                     subject=email_subject,
                     message=plain_message,  # <--- The plain text version goes here
-                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    from_email="bonheurndezenc@gmail.com",
                     recipient_list=[settings.ADMIN_EMAIL],
                     html_message=html_message,  # <--- The HTML version goes here
                     fail_silently=False,
