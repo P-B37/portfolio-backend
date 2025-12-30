@@ -232,8 +232,6 @@ STORAGES = {
     },
 }
 
-EMAIL_TIMEOUT = 10
-
 USE_CLOUDINARY = config("USE_CLOUDINARY", default=False, cast=bool)
 
 if USE_CLOUDINARY:

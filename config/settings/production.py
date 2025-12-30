@@ -41,7 +41,7 @@ SITE_NAME = config("SITE_NAME", default="Portfolio-Backend")
 # --- Email Settings ---
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
+EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 
 # Read from Environment Variables (Security Best Practice)
@@ -52,6 +52,11 @@ EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
 ADMIN_EMAIL = config("ADMIN_EMAIL", default="noreply@localhost")
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+EMAIL_USE_TLS = True
+# ADD THIS: Explicitly tell Django not to use implicit SSL (mutually exclusive with TLS)
+EMAIL_USE_SSL = False
+
+EMAIL_TIMEOUT = 10
 # Security Enhancements
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
