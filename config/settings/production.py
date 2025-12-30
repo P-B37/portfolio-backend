@@ -40,13 +40,13 @@ SITE_NAME = config("SITE_NAME", default="Portfolio-Backend")
 
 # --- Email Settings ---
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"  # Or smtp.sendgrid.net
+EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # Read from Environment Variables (Security Best Practice)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="noreply@localhost")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="password")
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
 
 # Who receives the contact form? (Your personal email)
 ADMIN_EMAIL = config("ADMIN_EMAIL", default="noreply@localhost")
