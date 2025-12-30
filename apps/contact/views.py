@@ -45,7 +45,7 @@ class ContactAPIView(APIView):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[settings.ADMIN_EMAIL],
                     html_message=html_message,  # <--- The HTML version goes here
-                    fail_silently=False,
+                    fail_silently=True,
                 )
 
                 return Response({"message": "Message sent!"}, status=status.HTTP_200_OK)
