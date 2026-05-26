@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from apps.projects.models import Project
 from apps.projects.services import generate_project_slug
 

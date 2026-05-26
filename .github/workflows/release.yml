@@ -1,18 +1,16 @@
-name: Django CI
+name: Release Version Tag
 
 on:
   push:
-    branches:
-      - dev # Also run on feature branches!
-  pull_request:
-    branches: ["main"]
+    tags:
+      - 'v*'
 
 jobs:
-  test:
+  validate:
+    name: Validate Codebase
     runs-on: ubuntu-latest
-
+    
     services:
-      # This creates a temporary, empty Postgres DB just for the duration of the test
       postgres:
         image: postgres:15
         env:
@@ -27,10 +25,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -38,7 +32,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.12"
 
     - name: Set up uv
       uses: astral-sh/setup-uv@v5
@@ -49,18 +43,38 @@ jobs:
     - name: Install dependencies
       run: uv sync --frozen
 
-    # Seed the test environment directly from the production-aligned template
-    - name: Create .env file from template
+    - name: Create .env file
       run: |
         cp .env.example .env
         sed -i 's/DB_PASSWORD=postgres/DB_PASSWORD=password/g' .env
 
-    - name: Run Linting (Black, isort, Flake8)
-      run: |
-        uv run pre-commit run --all-files
+    - name: Run Linting
+      run: uv run pre-commit run --all-files
 
-    - name: Run tests
+    - name: Run Pytest
       env:
         DJANGO_SETTINGS_MODULE: config.settings.local
+      run: uv run pytest
+
+  release:
+    name: Create GitHub Release
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Required for changelog generation
+
+    - name: Generate Draft GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        uv run pytest
+        # Create a release draft with automated release notes compiled by GitHub CLI
+        gh release create ${{ github.ref_name }} \
+          --draft \
+          --generate-notes \
+          --title "Release ${{ github.ref_name }}"

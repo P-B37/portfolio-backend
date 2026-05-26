@@ -1,5 +1,6 @@
 from django.test import TestCase
-from apps.blog.services import generate_blog_slug, calculate_reading_time
+
+from apps.blog.services import calculate_reading_time, generate_blog_slug
 
 
 class TestBlogServices(TestCase):

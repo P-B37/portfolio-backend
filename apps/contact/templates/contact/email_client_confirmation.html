@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inquiry Received</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f4f5; padding: 20px; margin: 0; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e4e4e7; }
+        .header { background-color: #18181b; color: #ffffff; padding: 25px; text-align: center; }
+        .header h2 { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: 0.5px; }
+        .content { padding: 30px; color: #3f3f46; line-height: 1.6; font-size: 15px; }
+        .greeting { font-size: 16px; font-weight: bold; color: #18181b; }
+        .quote { background-color: #f4f4f5; padding: 15px 20px; border-left: 4px solid #18181b; border-radius: 4px; margin: 20px 0; font-size: 14px; color: #52525b; }
+        .quote strong { color: #18181b; }
+        .signature { margin-top: 25px; border-top: 1px solid #f4f4f5; padding-top: 15px; }
+        .footer { background-color: #f4f4f5; padding: 15px; text-align: center; font-size: 12px; color: #71717a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Inquiry Received</h2>
+        </div>
+        <div class="content">
+            <p class="greeting">Hi {{ name }},</p>
+            <p>Thank you for reaching out! This is an automated receipt confirming that your message has been successfully received. I will review it and get back to you as soon as possible.</p>
+            
+            <p>Here is a copy of your inquiry details:</p>
+            <div class="quote">
+                <strong>Subject:</strong> {{ subject }}<br><br>
+                {{ message|linebreaksbr }}
+            </div>
+            
+            <div class="signature">
+                <p>Best regards,<br><strong>Portfolio Notification Service</strong></p>
+            </div>
+        </div>
+        <div class="footer">
+            Sent from automated Portfolio Backend. Please do not reply directly to this automated email.
+        </div>
+    </div>
+</body>
+</html>

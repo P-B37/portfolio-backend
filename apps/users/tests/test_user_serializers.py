@@ -6,8 +6,9 @@ that they correctly validate and serialize user data.
 """
 
 import pytest
-from apps.users.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
+
+from apps.users.serializers import UserCreateSerializer
 
 User = get_user_model()
 

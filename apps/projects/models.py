@@ -1,9 +1,10 @@
 import uuid
-from django.db import models
-from django.core.validators import MaxLengthValidator
-from django.utils.translation import gettext_lazy as _
 
 from core.models import SoftDeleteModel, TimeStampedModel
+from django.core.validators import MaxLengthValidator
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
 from .manager import ProjectManager
 
 
@@ -11,6 +12,37 @@ class Status(models.TextChoices):
     DRAFT = "DR", _("Draft")
     PUBLISHED = "PB", _("Published")
     ARCHIVED = "AR", _("Archived")
+
+
+class Technology(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+    icon_name = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Lucide or DevIcon class name (e.g., 'cisco', 'python', 'ansible')",
+    )
+    category = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="e.g., Automation, Networking, Development, DevOps, Cloud",
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Technology"
+        verbose_name_plural = "Technologies"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
 
 class Project(SoftDeleteModel, TimeStampedModel):
@@ -36,6 +68,12 @@ class Project(SoftDeleteModel, TimeStampedModel):
     )
 
     is_featured = models.BooleanField(default=False)
+    technologies = models.ManyToManyField(
+        Technology,
+        related_name="projects",
+        blank=True,
+        help_text="Selected technology tags for this project",
+    )
     objects = ProjectManager()
 
     class Meta:
@@ -47,6 +85,7 @@ class Project(SoftDeleteModel, TimeStampedModel):
             models.Index(fields=["status"]),
             models.Index(fields=["is_featured"]),
             models.Index(fields=["slug"]),
+            models.Index(fields=["created_at"]),
         ]
 
     def __str__(self):

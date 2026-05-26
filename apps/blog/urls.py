@@ -1,4 +1,5 @@
 from rest_framework.routers import DefaultRouter
+
 from .views import PostViewSet
 
 app_name = "blog"

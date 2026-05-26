@@ -1,5 +1,6 @@
-from .base import *  # noqa
 from decouple import config
+
+from .base import *  # noqa
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -59,6 +60,7 @@ EMAIL_USE_SSL = False
 EMAIL_TIMEOUT = 10
 # Security Enhancements
 SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True

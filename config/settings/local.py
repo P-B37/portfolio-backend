@@ -1,5 +1,7 @@
 import os
+
 from decouple import config
+
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -52,4 +54,13 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="password")
 
 # Who receives the contact form? (Your personal email)
 ADMIN_EMAIL = config("ADMIN_EMAIL", default="noreply@localhost")
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Disable caching in development if requested (defaults to True for debugging)
+DISABLE_CACHE = config("DISABLE_CACHE", default=True, cast=bool)
+if DISABLE_CACHE:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
+    CACHE_TIMEOUT = 0

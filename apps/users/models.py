@@ -2,11 +2,11 @@
 Custom User model for the application.
 """
 
+from core.models import SoftDeleteModel
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from core.models import SoftDeleteModel
 from .managers import CustomUserManager
 
 

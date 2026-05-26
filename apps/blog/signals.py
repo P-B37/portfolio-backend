@@ -1,7 +1,8 @@
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+
 from .models import Post
-from .services import generate_blog_slug, calculate_reading_time
+from .services import calculate_reading_time, generate_blog_slug
 
 
 @receiver(pre_save, sender=Post)

@@ -11,11 +11,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/stable/ref/settings/
 """
 
-import sys
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
-from decouple import config, Csv
+
+from decouple import Csv, config
 
 # --- PATH CONFIGURATION ---
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -264,3 +265,12 @@ if USE_CLOUDINARY:
     CLOUDINARY = CLOUDINARY_CREDENTIALS
 
 MEDIA_URL = config("MEDIA_URL", default="/media/")
+
+# --- CACHING CONFIGURATION ---
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "portfolio-backend-cache",
+    }
+}
+CACHE_TIMEOUT = config("CACHE_TIMEOUT", default=900, cast=int)
