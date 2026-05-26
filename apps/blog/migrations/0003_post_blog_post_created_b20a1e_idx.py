@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0002_post_reading_time_alter_post_content'),
+        ("blog", "0002_post_reading_time_alter_post_content"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='post',
-            index=models.Index(fields=['created_at'], name='blog_post_created_b20a1e_idx'),
+            model_name="post",
+            index=models.Index(
+                fields=["created_at"], name="blog_post_created_b20a1e_idx"
+            ),
         ),
     ]

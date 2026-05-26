@@ -7,18 +7,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('projects', '0001_initial'),
+        ("projects", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='technologies',
-            field=models.JSONField(blank=True, default=list, help_text='JSON list of technology tags'),
+            model_name="project",
+            name="technologies",
+            field=models.JSONField(
+                blank=True, default=list, help_text="JSON list of technology tags"
+            ),
         ),
         migrations.AlterField(
-            model_name='project',
-            name='summary',
-            field=models.TextField(help_text='Short overview for the project', validators=[django.core.validators.MaxLengthValidator(500)]),
+            model_name="project",
+            name="summary",
+            field=models.TextField(
+                help_text="Short overview for the project",
+                validators=[django.core.validators.MaxLengthValidator(500)],
+            ),
         ),
     ]

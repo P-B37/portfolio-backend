@@ -6,12 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('projects', '0002_project_technologies_alter_project_summary'),
+        ("projects", "0002_project_technologies_alter_project_summary"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='project',
-            index=models.Index(fields=['created_at'], name='projects_pr_created_6b02e3_idx'),
+            model_name="project",
+            index=models.Index(
+                fields=["created_at"], name="projects_pr_created_6b02e3_idx"
+            ),
         ),
     ]

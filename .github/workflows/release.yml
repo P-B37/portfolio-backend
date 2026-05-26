@@ -9,7 +9,7 @@ jobs:
   validate:
     name: Validate Codebase
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
