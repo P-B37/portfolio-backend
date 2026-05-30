@@ -14,6 +14,27 @@ class Status(models.TextChoices):
     ARCHIVED = "AR", _("Archived")
 
 
+class Category(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
 class Technology(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, unique=True)
@@ -66,8 +87,21 @@ class Project(SoftDeleteModel, TimeStampedModel):
         choices=Status.choices,
         default=Status.DRAFT,
     )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="projects",
+        verbose_name=_("Category"),
+    )
 
     is_featured = models.BooleanField(default=False)
+    claps_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of project claps",
+        verbose_name=_("Claps Count"),
+    )
     technologies = models.ManyToManyField(
         Technology,
         related_name="projects",
