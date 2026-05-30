@@ -1,7 +1,12 @@
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import viewsets
+from django.db.models import F
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets, status
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from apps.core.pagination import CustomPagination
 from apps.core.permissions import IsAdminOrReadOnly
@@ -21,6 +26,18 @@ class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
 
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = ["category__slug", "category__name"]
+    search_fields = ["title", "summary", "content"]
+    ordering_fields = [
+        "created_at",
+        "claps_count",
+    ]
+
     @method_decorator(cache_page(settings.CACHE_TIMEOUT))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -35,11 +52,39 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return ProjectSerializer
 
     def get_queryset(self):
-        queryset = Project.objects.prefetch_related("technologies")
+        queryset = Project.objects.select_related("category").prefetch_related("technologies")
         if self.request.user.is_staff:
             return queryset.all()
 
         return queryset.published()
+
+    @action(detail=True, methods=["POST"], permission_classes=[AllowAny])
+    def clap(self, request, slug=None):
+        project = self.get_object()
+        amount = request.data.get("amount", 1)
+
+        try:
+            amount = int(amount)
+            if amount < 1 or amount > 50:
+                return Response(
+                    {"error": "Clap amount must be between 1 and 50."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        except (ValueError, TypeError):
+            return Response(
+                {"error": "Invalid clap amount."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Clear cache to guarantee listing endpoints reflect real-time count
+        from django.core.cache import cache
+        cache.clear()
+
+        project.claps_count = F("claps_count") + amount
+        project.save(update_fields=["claps_count"])
+
+        project.refresh_from_db()
+        return Response({"claps_count": project.claps_count}, status=status.HTTP_200_OK)
 
 
 class ProjectFeaturedViewSet(viewsets.ReadOnlyModelViewSet):
@@ -65,7 +110,7 @@ class ProjectFeaturedViewSet(viewsets.ReadOnlyModelViewSet):
         return ProjectSerializer
 
     def get_queryset(self):
-        queryset = Project.objects.prefetch_related("technologies")
+        queryset = Project.objects.select_related("category").prefetch_related("technologies")
         if self.request.user.is_staff:
             return queryset.all()
 
