@@ -1,9 +1,9 @@
 from django.conf import settings
+from django.db.models import F
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.db.models import F
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets, status
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -52,7 +52,9 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return ProjectSerializer
 
     def get_queryset(self):
-        queryset = Project.objects.select_related("category").prefetch_related("technologies")
+        queryset = Project.objects.select_related("category").prefetch_related(
+            "technologies"
+        )
         if self.request.user.is_staff:
             return queryset.all()
 
@@ -78,6 +80,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
         # Clear cache to guarantee listing endpoints reflect real-time count
         from django.core.cache import cache
+
         cache.clear()
 
         project.claps_count = F("claps_count") + amount
@@ -110,7 +113,9 @@ class ProjectFeaturedViewSet(viewsets.ReadOnlyModelViewSet):
         return ProjectSerializer
 
     def get_queryset(self):
-        queryset = Project.objects.select_related("category").prefetch_related("technologies")
+        queryset = Project.objects.select_related("category").prefetch_related(
+            "technologies"
+        )
         if self.request.user.is_staff:
             return queryset.all()
 
