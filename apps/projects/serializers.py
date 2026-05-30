@@ -1,6 +1,17 @@
 from rest_framework import serializers
 
-from .models import Project, Technology
+from .models import Category, Project, Technology
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Category model.
+    """
+
+    class Meta:
+        model = Category
+        fields = ["id", "name", "slug"]
+        read_only_fields = ["id", "slug"]
 
 
 class TechnologySerializer(serializers.ModelSerializer):
@@ -21,6 +32,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     """
 
     status_label = serializers.CharField(source="get_status_display", read_only=True)
+    category = CategorySerializer(read_only=True)
     technologies = TechnologySerializer(many=True, read_only=True)
 
     class Meta:
@@ -37,6 +49,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "status",
             "status_label",
             "is_featured",
+            "claps_count",
+            "category",
             "created_at",
             "technologies",
         ]
@@ -50,6 +64,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
     """
 
     status_label = serializers.CharField(source="get_status_display", read_only=True)
+    category = CategorySerializer(read_only=True)
     technologies = TechnologySerializer(many=True, read_only=True)
 
     class Meta:
@@ -65,6 +80,8 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "status",
             "status_label",
             "is_featured",
+            "claps_count",
+            "category",
             "created_at",
             "technologies",
         ]
