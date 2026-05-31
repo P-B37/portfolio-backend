@@ -35,11 +35,11 @@ def send_contact_notifications_async(data):
     if whatsapp_number and whatsapp_apikey:
         try:
             whatsapp_message = (
-                f"📩 *New Portfolio Contact Form Submission*\n\n"
-                f"👤 *Name:* {data['name']}\n"
-                f"✉️ *Email:* {data['email']}\n"
-                f"📝 *Subject:* {data['subject']}\n\n"
-                f"💬 *Message:*\n{data['message']}"
+                f"*New Portfolio Contact Form Submission*\n\n"
+                f"*Name:* {data['name']}\n"
+                f"*Email:* {data['email']}\n"
+                f"*Subject:* {data['subject']}\n\n"
+                f"*Message:*\n{data['message']}"
             )
             encoded_message = urllib.parse.quote(whatsapp_message)
             url = (
