@@ -64,3 +64,14 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
+
+# --- Cache Configuration Overrides ---
+DISABLE_CACHE = config("DISABLE_CACHE", default=False, cast=bool)
+if DISABLE_CACHE:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
+    CACHE_TIMEOUT = 0
+
