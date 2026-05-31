@@ -41,7 +41,11 @@ class SendGridAPIBackend(BaseEmailBackend):
                             html_body = content
                             break
 
-                if not html_body and hasattr(message, "html_message") and message.html_message:
+                if (
+                    not html_body
+                    and hasattr(message, "html_message")
+                    and message.html_message
+                ):
                     html_body = message.html_message
 
                 # Construct SendGrid Mail object
@@ -60,7 +64,8 @@ class SendGridAPIBackend(BaseEmailBackend):
                     sent_count += 1
                 else:
                     logger.error(
-                        f"SendGrid API returned status code {response.status_code}: {response.body}"
+                        f"SendGrid API returned\
+                        status code {response.status_code}: {response.body}"
                     )
             except Exception as e:
                 logger.error(f"Failed to send email via SendGrid Web API: {e}")
