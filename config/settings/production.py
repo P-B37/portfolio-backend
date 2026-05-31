@@ -32,30 +32,44 @@ DATABASES = {
     }
 }
 
-DEFAULT_FROM_EMAIL = config(
-    "EMAIL_HOST_USER",
-    default="noreply@localhost",
-)
 DOMAIN = config("DOMAIN", default="localhost:8000")
 SITE_NAME = config("SITE_NAME", default="Portfolio-Backend")
 
 # --- Email Settings ---
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 2525
-EMAIL_USE_TLS = True
 
-# Read from Environment Variables (Security Best Practice)
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
+# Determine provider dynamically (default to google, fallback to sendgrid)
+EMAIL_PROVIDER = config("EMAIL_PROVIDER", default="google").lower()
+
+google_user = config("EMAIL_HOST_USER", default="")
+google_password = config("EMAIL_HOST_PASSWORD", default="")
+
+# Auto-fallback to SendGrid if google provider is selected but no credentials are provided
+if EMAIL_PROVIDER == "google" and (not google_user or not google_password or google_password == "password") and config("SENDGRID_API_KEY", default=""):
+    EMAIL_PROVIDER = "sendgrid"
+
+if EMAIL_PROVIDER == "google":
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+    EMAIL_HOST_USER = google_user or "bonheurndezenc@gmail.com"
+    EMAIL_HOST_PASSWORD = google_password or "password"
+else:
+    EMAIL_HOST = "smtp.sendgrid.net"
+    EMAIL_PORT = 2525
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+    EMAIL_HOST_USER = "apikey"
+    EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
+
+DEFAULT_FROM_EMAIL = config(
+    "DEFAULT_FROM_EMAIL",
+    default=google_user or "bonheurndezenc@gmail.com"
+)
 
 # Who receives the contact form? (Your personal email)
 ADMIN_EMAIL = config("ADMIN_EMAIL", default="bonheurndezenc@gmail.com")
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-EMAIL_USE_TLS = True
-# ADD THIS: Explicitly tell Django not to use implicit SSL (mutually exclusive with TLS)
-EMAIL_USE_SSL = False
 
 EMAIL_TIMEOUT = 10
 # Security Enhancements
