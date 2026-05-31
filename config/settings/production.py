@@ -44,8 +44,13 @@ EMAIL_PROVIDER = config("EMAIL_PROVIDER", default="google").lower()
 google_user = config("EMAIL_HOST_USER", default="")
 google_password = config("EMAIL_HOST_PASSWORD", default="")
 
-# Auto-fallback to SendGrid if google provider is selected but no credentials are provided
-if EMAIL_PROVIDER == "google" and (not google_user or not google_password or google_password == "password") and config("SENDGRID_API_KEY", default=""):
+# Auto-fallback to SendGrid if google provider is selected but
+# no credentials are provided
+if (
+    EMAIL_PROVIDER == "google"
+    and (not google_user or not google_password or google_password == "password")
+    and config("SENDGRID_API_KEY", default="")
+):
     EMAIL_PROVIDER = "sendgrid"
 
 if EMAIL_PROVIDER == "google":
@@ -64,8 +69,7 @@ else:
     EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
 
 DEFAULT_FROM_EMAIL = config(
-    "DEFAULT_FROM_EMAIL",
-    default=google_user or "bonheurndezenc@gmail.com"
+    "DEFAULT_FROM_EMAIL", default=google_user or "bonheurndezenc@gmail.com"
 )
 
 # Who receives the contact form? (Your personal email)
