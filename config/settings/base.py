@@ -275,3 +275,7 @@ CACHES = {
     }
 }
 CACHE_TIMEOUT = config("CACHE_TIMEOUT", default=900, cast=int)
+
+# --- WHATSAPP NOTIFICATION CONFIGURATION ---
+WHATSAPP_NUMBER = config("WHATSAPP_NUMBER", default="")
+WHATSAPP_API_KEY = config("WHATSAPP_API_KEY", default="")

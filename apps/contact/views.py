@@ -1,6 +1,8 @@
 import logging
 import threading
+import urllib.parse
 
+import requests
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -20,15 +22,53 @@ class ContactThrottle(throttling.AnonRateThrottle):
     rate = "3/min"  # Limit: 3 requests per minute per IP
 
 
-def send_contact_emails_async(data):
+def send_contact_notifications_async(data):
     """
-    Background worker function that handles SMTP connections asynchronously.
-    Renders and delivers copies to both the portfolio owner (admin) and the client.
+    Background worker function that handles notifications asynchronously.
+    1. Sends an instant WhatsApp alert to the portfolio owner (Priority).
+    2. Dispatches email copies to the portfolio owner (admin) and the client.
     """
+    # --- 1. PRIORITY: WhatsApp Notification via CallMeBot ---
+    whatsapp_number = getattr(settings, "WHATSAPP_NUMBER", None)
+    whatsapp_apikey = getattr(settings, "WHATSAPP_API_KEY", None)
+
+    if whatsapp_number and whatsapp_apikey:
+        try:
+            whatsapp_message = (
+                f"📩 *New Portfolio Contact Form Submission*\n\n"
+                f"👤 *Name:* {data['name']}\n"
+                f"✉️ *Email:* {data['email']}\n"
+                f"📝 *Subject:* {data['subject']}\n\n"
+                f"💬 *Message:*\n{data['message']}"
+            )
+            encoded_message = urllib.parse.quote(whatsapp_message)
+            url = (
+                f"https://api.callmebot.com/whatsapp.php"
+                f"?phone={whatsapp_number}"
+                f"&text={encoded_message}"
+                f"&apikey={whatsapp_apikey}"
+            )
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                logger.info("WhatsApp contact form notification sent successfully.")
+            else:
+                logger.error(
+                    f"CallMeBot WhatsApp dispatch failed with code "
+                    f"{response.status_code}: {response.text}"
+                )
+        except Exception as wa_err:
+            logger.error(f"Failed to dispatch WhatsApp notification: {wa_err}")
+    else:
+        logger.warning(
+            "WhatsApp notifications skipped: "
+            "WHATSAPP_NUMBER or WHATSAPP_API_KEY not configured."
+        )
+
+    # --- 2. Email Notifications ---
     from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@localhost")
     admin_email = getattr(settings, "ADMIN_EMAIL", "bonheurndezenc@gmail.com")
 
-    # 1. Dispatch Admin Notification Copy
+    # A. Dispatch Admin Notification Copy
     try:
         admin_subject = f"Portfolio Inquiry: {data['subject']}"
         admin_html = render_to_string("contact/email_notification.html", context=data)
@@ -45,7 +85,7 @@ def send_contact_emails_async(data):
     except Exception as e:
         logger.error(f"Async SMTP delivery failed for Admin notification: {e}")
 
-    # 2. Dispatch Client Receipt Copy
+    # B. Dispatch Client Receipt Copy
     try:
         client_subject = f"Inquiry Received: {data['subject']}"
         client_html = render_to_string(
@@ -88,15 +128,15 @@ class ContactAPIView(APIView):
                 # We continue to try sending the email even if DB fails
                 # for maximum fault-tolerance.
 
-            # 2. Trigger async background email delivery daemon
+            # 2. Trigger async background notifications daemon
             try:
                 email_thread = threading.Thread(
-                    target=send_contact_emails_async, args=(data,), daemon=True
+                    target=send_contact_notifications_async, args=(data,), daemon=True
                 )
                 email_thread.start()
             except Exception as thread_err:
                 logger.error(
-                    "Failed to spawn background thread for email dispatch: "
+                    "Failed to spawn background thread for notification dispatch: "
                     f"{thread_err}"
                 )
 
