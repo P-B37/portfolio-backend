@@ -36,7 +36,6 @@ DOMAIN = config("DOMAIN", default="localhost:8000")
 SITE_NAME = config("SITE_NAME", default="Portfolio-Backend")
 
 # --- Email Settings ---
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # Determine provider dynamically (default to google, fallback to sendgrid)
 EMAIL_PROVIDER = config("EMAIL_PROVIDER", default="google").lower()
@@ -54,6 +53,7 @@ if (
     EMAIL_PROVIDER = "sendgrid"
 
 if EMAIL_PROVIDER == "google":
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "smtp.gmail.com"
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
@@ -61,12 +61,9 @@ if EMAIL_PROVIDER == "google":
     EMAIL_HOST_USER = google_user or "bonheurndezenc@gmail.com"
     EMAIL_HOST_PASSWORD = google_password or "password"
 else:
-    EMAIL_HOST = "smtp.sendgrid.net"
-    EMAIL_PORT = 2525
-    EMAIL_USE_TLS = True
-    EMAIL_USE_SSL = False
-    EMAIL_HOST_USER = "apikey"
-    EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY", default="password")
+    # Use SendGrid HTTPS Web API backend to bypass Render SMTP port blocking
+    EMAIL_BACKEND = "apps.core.email_backends.SendGridAPIBackend"
+    SENDGRID_API_KEY = config("SENDGRID_API_KEY", default="password")
 
 DEFAULT_FROM_EMAIL = config(
     "DEFAULT_FROM_EMAIL", default=google_user or "bonheurndezenc@gmail.com"
